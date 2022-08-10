@@ -1,8 +1,3 @@
-# todos
-# [] check if file exists compressed then ask
-# [] clear files in compressed folder?
-
-
 from pickletools import optimize
 from PIL import Image
 import os
@@ -27,18 +22,8 @@ def compress_images(directory=False, quality=30, customExportFolder=False):
   for image in images:
     splitImageUrl = os.path.splitext(image)
     img = Image.open(image)
-    # print('splitImageUrl:',splitImageUrl) 
-    # print(compressedFilesLocation)
     img.save(f"{compressedFilesLocation}/"+splitImageUrl[0]+"_compressed"+splitImageUrl[1], optimize=True, quality=quality)
+
 
 # compress_images("uploads", 50)
 
-compress_images("uploads", 50)
-# def fireFromCustomFolder(folderName=False):
-#   print(folderName)
-#   if not os.path.isdir(folderName):
-#     os.mkdir(folderName)
-#   else:
-
-
-# fireFromCustomFolder(f"{cwd}/compressed-test")
