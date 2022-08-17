@@ -1,6 +1,6 @@
-from PIL import Image
 import os
 import time
+from PIL import Image
 from watchdog.observers import Observer
 from watchdog.events import FileSystemEventHandler
 
@@ -32,11 +32,8 @@ class Handler(FileSystemEventHandler):
 
   def compress_images(self, directory=False, quality=30, customExportFolder=False):
     compressedFilesLocation = cwd+"/compressed"
-    # if there is a directory change to it 
-    if directory:
-      os.chdir(directory)
     # listing out the files inside path 
-    files = os.listdir()
+    files = os.listdir(f'{cwd}/{directory}')
     if customExportFolder:
       if not os.path.exists(customExportFolder):
         os.mkdir(customExportFolder)
@@ -44,18 +41,20 @@ class Handler(FileSystemEventHandler):
     elif not os.path.exists(compressedFilesLocation):
       os.mkdir(compressedFilesLocation)
 
-    images = [file for file in files if file.endswith(('jpg', 'png', "JPG"))]
+    os.chdir(f'{cwd}/{directory}')
+    # return print('cwd', os.getcwd())
+    images = [file for file in files if file.endswith(('jpg', 'png', 'JPG'))]
     for image in images:
       splitImageUrl = os.path.splitext(image)
+      print('image:', image)
       img = Image.open(image)
       img.save(f"{compressedFilesLocation}/"+splitImageUrl[0]+"_compressed"+splitImageUrl[1], optimize=True, quality=quality)
 
   def on_created(self, event):
     # print(event.src_path)
     fileType = os.path.splitext(event.src_path)[1]
-    print(fileType)
     if(fileType == '.jpg' or fileType == '.png'):
-      self.compress_images("uploads", 50)
+      self.compress_images('uploads', 50)
     else:
       print("only .jpg and .png file types are supported")              
   
